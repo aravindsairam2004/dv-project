@@ -1,0 +1,83 @@
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+from math import pi
+from sklearn.preprocessing import MinMaxScaler
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+#loading dataset
+data = pd.read_csv("/content/Telecust1.csv")
+print(data.head())
+
+df = data.head(25)
+# Analyze telecommunications network data (e.g., call volumes, network traffic, call drop rates) for a telecom operator.
+plt.figure(figsize=(10, 6))
+sns.lineplot(x='region', y='income', data=df, label='cost', marker='o', linestyle='-', color='blue')
+sns.lineplot(x='region', y='employ', data=df, label='employee', marker='o', linestyle='-', color='orange')
+plt.title('Telecom Analysis')
+plt.xlabel('Cost')
+plt.ylabel('Rate')
+plt.legend()
+# Rotate x-axis labels for better visibility
+plt.xticks(rotation=45)
+plt.show()
+
+#Visualize network performance using line charts or time series plots.
+plt.figure(figsize=(12,8))
+sns.barplot(x='region',y='employ',data=df,color='blue',label='region',orient='h')
+sns.barplot(x='reside',y='employ',data=df,color='orange',label='reside',orient='h')
+plt.title("network performance")
+plt.xlabel("Performance")
+plt.ylabel("Employee")
+plt.show()
+
+import folium
+
+# Create a map centered around a specific location
+mymap = folium.Map(location=[23.6850, 90.3563], zoom_start=12)
+mymap = folium.Map(location=[13.0827, 80.2707], zoom_start=12)
+
+#  Weak network coverage area
+folium.Marker(location=[23.6850, 90.3563], popup='Bangladesh').add_to(mymap)
+
+#  Strong network coverage area
+folium.Marker(location=[13.0827, 80.2707], popup='Chennai').add_to(mymap)
+
+# Display the map
+mymap
+
+#piechart for top 10 income recieving network providers
+df = data.head(10)
+plt.figure(figsize=(8, 6))
+plt.pie(df['income'], labels=df['address'], autopct='%1.1f%%', startangle=90,
+        colors=['gold', 'orange', 'lightblue', 'lightgreen', 'pink','red','yellow','bisque','darkblue','brown'])
+plt.title('Top 10 network providers address code')
+plt.show()
+
+Age = input('Enter the  age of the provider :')
+reside = {
+    'Yr': [Age] * 100,
+    'x': np.random.randint(0, 101, 100),  # x-coordinates
+    'y': np.random.randint(0, 101, 100)   # y-coordinates
+}
+df_service = pd.DataFrame(reside)
+# Create a heatmap for average network distribution regarding their age
+plt.figure(figsize=(10, 6))
+sns.kdeplot(data=df_service, x='x', y='y', cmap='coolwarm', fill=True, thresh=0.05)
+plt.title(Age+'  aged Service Distribution Heatmap')
+plt.xlabel('Broadband coverage')
+plt.ylabel('Cost per unit')
+plt.show()
+
+df =data.head(10)
+plt.figure(figsize=(12, 8))
+plt.scatter(x=df['address'], y=df['employ'], s=df['age'] * 10,
+            c=['red','green','black','orange','pink','brown','purple',
+               'cyan','gray','teal'],alpha=0.5)
+plt.title("Top 10 Network providers --- their location and employement")
+plt.xlabel("Address code")
+plt.ylabel("employement rate")
+plt.show()
